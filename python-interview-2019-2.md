@@ -13,7 +13,9 @@
    答案：
 
    ```
-   
+   [('a',1),('b',2),('c',3),('d',4)]
+   {1:'item1',3:'item9'}
+   6
    ```
 
 2. 下面的Python代码会输出什么。
@@ -28,7 +30,7 @@
    答案：
 
    ```
-   
+   42
    ```
 
 3. 有一个通过网络获取数据的Python函数（可能会因为网络或其他原因出现异常），写一个装饰器让这个函数在出现异常时可以重新执行，但尝试重新执行的次数不得超过指定的最大次数。
@@ -36,7 +38,19 @@
    答案：
 
    ```Python
-   
+   from functools import wraps
+   def outer(count):
+      def inner(func):
+         @wraps(func)
+         def wrapper(*args, **kwargs):
+            times = 0
+            while times < count:
+               try:
+                  return func(*args, **kwargs)
+               except:
+                  continue
+         return wrapper
+      return inner
    ```
 
 4. 下面的字典中保存了某些公司今日的股票代码及价格，用一句Python代码从中找出价格最高的股票对应的股票代码，用一句Python代码创建股票价格大于100的股票组成的新字典。
@@ -58,7 +72,9 @@
    答案：
 
    ```Python
-   
+   from collections import Counter
+   res = Counter(pricecs).most_common(1)
+   new_dict = {key:value for key,value in prices.items() if value>100}
    ```
 
 5. 用生成式实现矩阵的转置操作。例如，用`[[1, 2], [3, 4], [5, 6]`表示矩阵$\begin{bmatrix}1 & 2\\\\3 &4\\\\5 & 6\end{bmatrix}$，写一个生成式将其转换成`[[1, 3, 5], [2, 4, 6]]`即$\begin{bmatrix}1 & 3 & 5\\\\2 & 4 & 6\end{bmatrix}$。
@@ -66,7 +82,7 @@
    答案：
 
    ```Python
-   
+   res = [list(item) for item in list(zip(*[[1, 2], [3, 4], [5, 6]]))]
    ```
 
 6. 写一个函数，传入的参数是一个列表（列表中的元素可能也是一个列表），返回该列表最大的嵌套深度，例如：
@@ -82,7 +98,17 @@
    答案：
 
    ```Python
-   
+   def max_depth(lst):
+      count_list = []
+      count = 0
+      lst_str = str(lst)
+      for char in lst_str:
+         if char == '[':
+            count += 1
+            count_list.append(count)
+         elif char == ']':
+            count -= 1
+      return max(count_list)
    ```
 
 7. 写一个函数，实现将输入的长链接转换成短链接，每个长链接对应的短链接必须是独一无二的且每个长链接只应该对应到一个短链接，假设短链接统一以`http://t.cn/`开头。
@@ -110,7 +136,7 @@
     答案：
 
     ```
-    
+    在堆空间中数据对象会有一个引用计数的属性表示当前有多少变量指向它或者说被引用多少次，若引用计数为0，python自动销毁该对象并回收内存空间
     ```
 
 10. 在MySQL数据库中有名为`tb_result`的表如下所示，请写出能查询出如下所示结果的SQL。
@@ -145,7 +171,9 @@
     答案：
 
     ```
-    
+    accept：客户端可接收数据类型
+    user-agent：浏览器标识
+    referer：表示上一个链接的url
     ```
 
 12. 阐述JSON Web Token的工作原理和优点。
@@ -169,7 +197,7 @@
     答案：
 
     ```
-    
+    https协议在开始客户端与服务端会进行一系列的确认过程，包括确定通信加密套件，密钥协商过程使用非对称加密算法，数据通信过程使用对称加密算法，因为对称加密的加密解密过程比非对称加密方式的效率要高。https比起http多了一个ssl/tls协议层，用于加密通信，而http传输过程是明文传输。
     ```
 
 15. 简述如何检查数据库是不是系统的性能瓶颈以及你在工作中是如何优化数据库操作性能的。
