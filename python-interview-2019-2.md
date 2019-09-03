@@ -128,7 +128,25 @@
     答案：
 
     ```Python
-    
+   from threading import Thread
+   count = 0
+   def func(nums):
+      while True:
+         try:
+            num = next(nums)
+            global count
+            count += num
+            print(count)
+         except StopIteration:
+            return
+            
+   nums = (i for i in range(1,101))
+   t_list = [Thread(target=func, args=(nums,)) for _ in range(5)]
+   for t in t_list:
+      t.start()
+   for t in t_list:
+      t.join()
+
     ```
 
 9. 请阐述Python是如何进行内存管理的。
@@ -174,6 +192,7 @@
     accept：客户端可接收数据类型
     user-agent：浏览器标识
     referer：表示上一个链接的url
+    host：指定访问主机名
     ```
 
 12. 阐述JSON Web Token的工作原理和优点。
@@ -189,7 +208,7 @@
     答案：
 
     ```
-    
+    本地进行域名解析，或者通过dns服务器进行域名解析获取目标网址ip地址，建立可靠的tcp连接，http请求经过应用层、传输层、网络层、数据链路层封装，经由默认网关或指定网关向外传输，经由多跳路由，到达目标服务器的web服务器如nginx、apache，由web服务器处理网络请求并将请求分发至其反向代理映射的多台(可以通过uwsgi)web应用服务器，及django或者flask处，在django中，http请求会通过设置文件中指定的中间件并按顺序通过，首先通过的是所有中间件的proccess_request方法，接着会重新按顺序执行所有中间件的process_view方法，接着会走到路由分发的地方，进行路由匹配，再进入到对应的业务代码视图函数，在这里可能会通过模型层通过orm对数据库数据进行操作，并返回指定数据，或者调用模板层，返回html文件，返回时再按配置文件中的中间件顺序逆序执行所有的process_response方法，再对返回数据进行逐层封装，通过web服务器返回至客户端，传输过程应该是基于tcp协议可靠传输，若数据过多会进行ip分片，客户端收到数据对分片数据组装，逐层解包，获取html页面，在浏览器上渲染页面。
     ```
 
 14. 请阐述HTTPS的工作原理，并说明该协议与HTTP之间的区别。
