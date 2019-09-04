@@ -39,7 +39,7 @@
 
    ```Python
    from functools import wraps
-   def outer(count):
+   def outer(count=1):
       def inner(func):
          @wraps(func)
          def wrapper(*args, **kwargs):
@@ -109,6 +109,16 @@
          elif char == ']':
             count -= 1
       return max(count_list)
+      
+      def depth_of_list(items):
+         if isinstance(items, list):
+         max_depth = 1
+         for item in items:
+         curr_depth = depth_of_list(item)
+         if curr_depth + 1 > max_depth:
+         max_depth = curr_depth + 1
+         return max_depth
+         return 0
    ```
 
 7. 写一个函数，实现将输入的长链接转换成短链接，每个长链接对应的短链接必须是独一无二的且每个长链接只应该对应到一个短链接，假设短链接统一以`http://t.cn/`开头。
@@ -120,7 +130,33 @@
    答案：
 
    ```Python
-   
+   seq_num = 10000000
+   url_maps = {}
+
+
+   def to_base62(num):
+      chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+      result = []
+      while num > 0:
+         result.append(chars[num % 62])
+         num //= 62
+      return ''.join(reversed(result))
+
+   def to_short(url):
+      if url in url_maps:
+         return url_maps[url]
+      global seq_num
+      seq_num += 1
+      short_url = f'http://t.cn/{to_base62(seq_num)}'
+      url_maps[url] = short_url
+      return short_url
+
+   while True:
+      url = input('输入url(q退出):')
+      if url == 'q':
+         break
+      print(to_short(url))
+      print(url_maps)
    ```
 
 8. 用5个线程，将1~100的整数累加到一个初始值为0的变量上，每次累加时将线程ID和本次累加后的结果打印出来。
@@ -146,6 +182,23 @@
       t.start()
    for t in t_list:
       t.join()
+      
+      
+      
+      from threading import get_ident, Thread, Lock
+      from concurrent.futures import ThreadPoolExecutor
+      result, i = 0, 1
+      locker = Lock()
+      def calc():
+         global result, i
+         while True:
+            with locker:
+               if i > 100:
+                  break
+               result, i = result + i, i + 1
+               print(get_ident(), result)
+      with ThreadPoolExecutor(max_workers=5) as pool:
+      pool.submit(calc)
 
     ```
 
@@ -232,6 +285,6 @@
     答案：
 
     ```Shell
-    
+    tail -n 100000 /var/log/nginx/access.log | awk '{print $1}' | sort | uniq -c | sort -nr | head -n 1 
     ```
 
