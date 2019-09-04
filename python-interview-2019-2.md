@@ -114,10 +114,10 @@
          if isinstance(items, list):
          max_depth = 1
          for item in items:
-         curr_depth = depth_of_list(item)
-         if curr_depth + 1 > max_depth:
-         max_depth = curr_depth + 1
-         return max_depth
+            curr_depth = depth_of_list(item)
+            if curr_depth + 1 > max_depth:
+               max_depth = curr_depth + 1
+            return max_depth
          return 0
    ```
 
